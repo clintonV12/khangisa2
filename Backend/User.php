@@ -193,17 +193,15 @@ class User {
         $imagePath = "";
         $temp = $_FILES['pic']['tmp_name'];
 
-        $new_name = md5(rand().time()).'.jpg';
-        move_uploaded_file($temp, "../uploads/profile_pics/".$new_name);
+        $new_name = md5(rand().time()).'.jpeg';
+        $image_location = "../uploads/profile_pics/".$new_name;
+        move_uploaded_file($temp,$image_location);
+        
+        $imageResource = imagecreatefromjpeg($image_location);//create resource from jpeg
+        $resizedResource = imagescale($imageResource,"200","250",IMG_BILINEAR_FIXED);//resize image resource
+        imagejpeg($resizedResource,$image_location,100);//create jpeg from the resized resource and replace original jpeg
 
-        $path_parts = pathinfo($_FILES['pic']["name"]);
-        $ext = $path_parts['extension'];
-
-        if(strcasecmp($ext,"png")==0 || strcasecmp($ext,"jpg")==0 || strcasecmp($ext,"ico")==0 || strcasecmp($ext,"bmp")==0){
-            //file location
-            $imagePath = "http://127.0.0.1/Khangisa2/uploads/profile_pics/$new_name";   
-        }
-
+        $imagePath = "http://127.0.0.1/Khangisa2/uploads/profile_pics/$new_name";   
         $this->setImage($imagePath);
     }
 
