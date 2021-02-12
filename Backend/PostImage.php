@@ -100,17 +100,15 @@ class PostImage{
         $imagePath = "";
         $temp = $_FILES['image']['tmp_name'];
 
-        $new_name = md5(rand().time()).'.jpg';
-        move_uploaded_file($temp, "../uploads/adImages/".$new_name);
+        $new_name = md5(rand().time()).'.jpeg';
+        $image_location = "../uploads/adImages/".$new_name;
+        move_uploaded_file($temp,$image_location);
+        
+        $imageResource = imagecreatefromjpeg($image_location);//create resource from jpeg
+        $resizedResource = imagescale($imageResource,"400","350",IMG_BILINEAR_FIXED);//resize image resource
+        imagejpeg($resizedResource,$image_location,100);//create jpeg from the resized resource and replace original jpeg
 
-        $path_parts = pathinfo($_FILES['image']["name"]);
-        $ext = $path_parts['extension'];
-
-        if(strcasecmp($ext,"png")==0 || strcasecmp($ext,"jpg")==0 || strcasecmp($ext,"ico")==0 || strcasecmp($ext,"bmp")==0){
-            //file location
-            $imagePath = "http://127.0.0.1/khangisa2/uploads/adImages/$new_name";   
-        }
-
+        $imagePath = "http://127.0.0.1/khangisa2/uploads/adImages/$new_name";   
         $this->setLocation($imagePath);
     }
 }
